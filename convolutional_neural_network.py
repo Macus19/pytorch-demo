@@ -31,7 +31,7 @@ class ConvNet(nn.Module):
         self.layer1 = nn.Sequential(
             # 卷积层计算
             nn.Conv2d(1, 16, kernel_size=5, stride=1, padding=2),
-            # 批归一化
+            # 批归一化，防止因为数据过大导致RELU结果不稳定
             nn.BatchNorm2d(16),
             # 使用ReLU激活函数
             nn.ReLU(),
@@ -56,6 +56,7 @@ class ConvNet(nn.Module):
     def forward(self, x):
         out = self.layer1(x)
         out = self.layer2(out)
+        # 转换成一维的向量（7*7*32）
         out = out.reshape(out.size(0), -1)
         out = self.fc(out)
         return out
